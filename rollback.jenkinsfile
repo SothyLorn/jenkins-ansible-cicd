@@ -1,0 +1,66 @@
+pipeline{
+    agent any
+    parameters {
+        string(name: 'Version', defaultValue: 'main', description: 'Please input the docker images version')
+    }
+    environment {
+        docker_hub_password = credentials('docker_hub_password')
+        docker_repo_url = "sothy/employee-api-demo"
+        project_name = "employee-api"
+        git_repo = "https://github.com/sothylorn/employee-api.git"
+        app_url = "https://employee-api.sothy.site"
+        Telegram_Token="8567963411:AAF6c1uoaVPazm-WY6VkY-7yuG7WYRtDrRE"
+        Telegram_ChatID="-5196312295"
+    }
+    stages{
+        stage("Deployment to Server"){
+            steps{
+                script {
+                    sh """
+                        ansible-playbook ansible/deployment.yml \
+                                 -i ansible/hosts \
+                                 -l ${project_name}-${params.app_env} \
+                                 -e project_name=${project_name} \
+                                 -e docker_hub_user="sothy" \
+                                 -e docker_hub_password=${docker_hub_password} \
+                                 -e docker_repo_url=${docker_repo_url} \
+                                 -e version="${params.Version}"
+                    """
+                }
+            }
+            
+        }
+    }
+    post {
+        success {
+            script {
+                def message = """🚀 *Rollback Application Deployment on ${project_name} completed!*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ *Application Information:*
+- Application Name: ${project_name}
+- Application URL: ${app_url}
+- Application Version: "${docker_repo_url}:${params.Version}"
+- BUILD USER: "${BUILD_USER}"
+"""
+                sh """
+                    curl -s -X POST https://api.telegram.org/bot${Telegram_Token}/sendMessage \
+                    -d chat_id=${Telegram_ChatID} \
+                    -d parse_mode=Markdown \
+                    -d text="${message}"
+                """
+            }
+        }    
+        failure {
+            script {
+                def failureMessage = "❌ *Rollback Deployment Failed!* Application: ${project_name} Check Jenkins for details."
+                
+                sh """
+                    curl -s -X POST https://api.telegram.org/bot${Telegram_Token}/sendMessage \
+                    -d chat_id=${Telegram_ChatID} \
+                    -d parse_mode=Markdown \
+                    -d text="${failureMessage}"
+                """
+            }
+        }
+    }
+}
