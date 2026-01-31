@@ -17,7 +17,8 @@ pipeline{
             steps{
                 script {
                     sh """
-                        ansible-playbook ansible/configure.yml -i ansible/hosts \ 
+                        ansible-playbook ansible/configure.yml \
+                                 -i ansible/hosts \
                                  -e Telegram_Token=${Telegram_Token} \
                                  -e Telegram_ChatID=${Telegram_ChatID} \
                                  -e project_name=${project_name} \
