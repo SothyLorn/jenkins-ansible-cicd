@@ -30,26 +30,22 @@ pipeline{
                 }
             }  
         }
-        // stage("Build Docker Images"){
-        //     steps{
-        //         script {
-        //             sh """
-        //                 cd ${project_name}
-        //                 docker build . -t ${docker_repo_url}:v${BUILD_NUMBER}
-        //             """
-        //         }
-        //     }
-        // }
-        // stage("Push Docker Images"){
-        //     steps{
-        //         script {
-        //             sh """
-        //                 docker login -u sothy -p ${docker_hub_password}
-        //                 docker push ${docker_repo_url}:v${BUILD_NUMBER}
-        //             """
-        //         }
-        //     }
-        // }
+        stage("Build & Push Docker Images"){
+            steps{
+                script {
+                    sh """
+                        ansible-playbook ansible/docker-build.yml \
+                                 -i ansible/hosts \
+                                 -e project_name=${project_name} \
+                                 -e workspace=${WORKSPACE} \
+                                 -e docker_hub_user="sothy" \
+                                 -e docker_hub_password=${docker_hub_password} \
+                                 -e docker_repo_url=${docker_repo_url} \
+                                 -e version="v${BUILD_NUMBER}"
+                    """
+                }
+            }
+        }
         // stage("Deployment to Server"){
         //     steps{
         //         script {
