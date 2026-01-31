@@ -20,7 +20,7 @@ pipeline{
                         if [ -d "${project_name}" ]; then
                             rm -rf ${project_name}
                         fi
-                        git clone -b ${Git_Branch} ${git_repo} 
+                        git clone -b ${params.Git_Branch} ${git_repo} 
                     """
                 }
             }  
