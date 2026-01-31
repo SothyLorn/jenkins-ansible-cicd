@@ -1,5 +1,8 @@
 pipeline{
     agent any
+    parameters {
+        string(name: 'Git_Branch', defaultValue: 'main', description: 'Please input git branch')
+    }
     environment {
         docker_hub_password = credentials('docker_hub_password')
         docker_repo_url = "sothy/employee-api-demo"
@@ -17,7 +20,7 @@ pipeline{
                         if [ -d "${project_name}" ]; then
                             rm -rf ${project_name}
                         fi
-                        git clone ${git_repo}
+                        git clone -b ${Git_Branch} ${git_repo} 
                     """
                 }
             }  
