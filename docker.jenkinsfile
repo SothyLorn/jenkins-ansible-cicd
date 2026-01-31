@@ -1,0 +1,59 @@
+pipeline{
+    agent any
+    environment {
+        docker_hub_password = credentials('docker_hub_password')
+        docker_repo_url = "sothy/employee-api-demo"
+        project_name = "employee-api"
+        git_repo = "https://github.com/sothylorn/employee-api.git"
+    }
+    stages{
+        stage("Configure"){
+            steps{
+                script {
+                    sh """
+                        git clone ${git_repo}
+                    """
+                }
+            }
+            
+        }
+        stage("Build Docker Images"){
+            steps{
+                script {
+                    sh """
+                        cd ${project_name}
+                        docker build . -t ${docker_repo_url}:v${BUILD_NUMBER}
+                    """
+                }
+            }
+            
+        }
+        stage("Push Docker Images"){
+            steps{
+                script {
+                    sh """
+                        docker login -u sothy -p ${docker_hub_password}
+                        docker push ${docker_repo_url}:v${BUILD_NUMBER}
+                    """
+                }
+            }
+            
+        }stage("Deployment to Server"){
+            steps{
+                echo "========executing A========"
+            }
+            
+        }
+    }
+    post{
+        always{
+            echo "========always========"
+        }
+        success{
+            echo "========pipeline executed successfully ========"
+        }
+        failure{
+            echo "========pipeline execution failed========"
+        }
+    }
+}
