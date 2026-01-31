@@ -11,6 +11,9 @@ pipeline{
             steps{
                 script {
                     sh """
+                        if [ -d "${project_name}" ]; then
+                            rm -rf ${project_name}
+                        fi
                         git clone ${git_repo}
                     """
                 }
@@ -38,7 +41,11 @@ pipeline{
         }
         stage("Deployment to Server"){
             steps{
-                echo "========executing A========"
+                script {
+                    sh """
+                        ssh root@152.42.214.43 "docker run -d --name ${project_name} -p 4000:4000 --restart always ${docker_repo_url}:v${BUILD_NUMBER}"
+                    """
+                }
             }
             
         }
