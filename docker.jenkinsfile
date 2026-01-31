@@ -61,7 +61,7 @@ pipeline{
 ✅ *Application Information:*
 - Application Name: ${project_name}
 - Application URL: ${app_url}
-- Application Version: "${docker_repo_url}:v{BUILD_NUMBER}"
+- Application Version: "${docker_repo_url}:v${BUILD_NUMBER}"
 - BUILD USER: "${BUILD_USER}"
 """
                 sh """
