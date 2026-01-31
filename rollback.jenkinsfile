@@ -1,7 +1,7 @@
 pipeline{
     agent any
     parameters {
-        string(name: 'Version', defaultValue: 'main', description: 'Please input the docker images version')
+        string(name: 'Version', defaultValue: 'v1', description: 'Please input the docker images version')
     }
     environment {
         docker_hub_password = credentials('docker_hub_password')
