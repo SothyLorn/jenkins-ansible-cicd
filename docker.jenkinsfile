@@ -43,7 +43,7 @@ pipeline{
             steps{
                 script {
                     sh """
-                        ssh root@152.42.214.43 "docker run -d --name ${project_name} -p 4000:4000 --restart always ${docker_repo_url}:v${BUILD_NUMBER}"
+                        ssh root@152.42.214.43 "docker rm -f ${project_name}; docker run -d --name ${project_name} -p 4000:4000 --restart always ${docker_repo_url}:v${BUILD_NUMBER}"
                     """
                 }
             }
