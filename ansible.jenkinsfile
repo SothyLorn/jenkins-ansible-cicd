@@ -2,6 +2,7 @@ pipeline{
     agent any
     parameters {
         string(name: 'Git_Branch', defaultValue: 'main', description: 'Please input git branch')
+        choice(name: 'app_env', choices: ['dev', 'uat', 'prod'], description: 'Pick something')
     }
     environment {
         docker_hub_password = credentials('docker_hub_password')
@@ -46,16 +47,23 @@ pipeline{
                 }
             }
         }
-        // stage("Deployment to Server"){
-        //     steps{
-        //         script {
-        //             sh """
-        //                 ssh root@152.42.214.43 "docker rm -f ${project_name}; docker run -d --name ${project_name} -p 4000:4000 --restart always ${docker_repo_url}:v${BUILD_NUMBER}"
-        //             """
-        //         }
-        //     }
+        stage("Deployment to Server"){
+            steps{
+                script {
+                    sh """
+                        ansible-playbook ansible/deployment.yml \
+                                 -i ansible/hosts \
+                                 -l ${project_name}-${params.app_env} \
+                                 -e project_name=${project_name} \
+                                 -e docker_hub_user="sothy" \
+                                 -e docker_hub_password=${docker_hub_password} \
+                                 -e docker_repo_url=${docker_repo_url} \
+                                 -e version="v${BUILD_NUMBER}"
+                    """
+                }
+            }
             
-        // }
+        }
     }
     post {
         success {
