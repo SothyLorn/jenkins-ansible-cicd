@@ -5,6 +5,9 @@ pipeline{
         docker_repo_url = "sothy/employee-api-demo"
         project_name = "employee-api"
         git_repo = "https://github.com/sothylorn/employee-api.git"
+        app_url = "https://employee-api.sothy.site"
+        Telegram_Token="8345257146:AAHnSLoXB8VG9fMG8DmfZx34cb7I4FquUiw"
+        Telegram_ChatID="-5281328330"
     }
     stages{
         stage("Configure"){
@@ -50,15 +53,36 @@ pipeline{
             
         }
     }
-    post{
-        always{
-            echo "========always========"
-        }
-        success{
-            echo "========pipeline executed successfully ========"
-        }
-        failure{
-            echo "========pipeline execution failed========"
+    post {
+        success {
+            script {
+                def message = """🚀 *Application Deployment on ${project_name} completed!*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ *Application Information:*
+- Application Name: ${project_name}
+- Application URL: ${app_url}
+- Application Version: "${docker_repo_url}:v{BUILD_NUMBER}"
+- BUILD USER: "${BUILD_USER}"
+"""
+                sh """
+                    curl -s -X POST https://api.telegram.org/bot${Telegram_Token}/sendMessage \
+                    -d chat_id=${Telegram_ChatID} \
+                    -d parse_mode=Markdown \
+                    -d text="${message}"
+                """
+            }
+        }    
+        failure {
+            script {
+                def failureMessage = "❌ *Deployment Failed!* Application: ${project_name} Check Jenkins for details."
+                
+                sh """
+                    curl -s -X POST https://api.telegram.org/bot${Telegram_Token}/sendMessage \
+                    -d chat_id=${Telegram_ChatID} \
+                    -d parse_mode=Markdown \
+                    -d text="${failureMessage}"
+                """
+            }
         }
     }
 }
