@@ -1,0 +1,95 @@
+pipeline{
+    agent any
+    parameters {
+        string(name: 'Git_Branch', defaultValue: 'main', description: 'Please input git branch')
+    }
+    environment {
+        docker_hub_password = credentials('docker_hub_password')
+        docker_repo_url = "sothy/employee-api-demo"
+        project_name = "employee-api"
+        git_repo = "https://github.com/sothylorn/employee-api.git"
+        app_url = "https://employee-api.sothy.site"
+        Telegram_Token="8567963411:AAF6c1uoaVPazm-WY6VkY-7yuG7WYRtDrRE"
+        Telegram_ChatID="-5196312295"
+    }
+    stages{
+        stage("Configure"){
+            steps{
+                script {
+                    sh """
+                        ansible-playbook ansible/configure.yml -i ansible/hosts \   
+                                 -e Telegram_Token=${Telegram_Token} \
+                                 -e Telegram_ChatID=${Telegram_ChatID} \
+                                 -e project_name=${project_name} \
+                                 -e git_repo=${git_repo} \
+                                 -e git_branch=${params.Git_Branch} \
+                                 -e build_user=${BUILD_USER} \
+                                 -e workspace=${WORKSPACE}
+                    """
+                }
+            }  
+        }
+        // stage("Build Docker Images"){
+        //     steps{
+        //         script {
+        //             sh """
+        //                 cd ${project_name}
+        //                 docker build . -t ${docker_repo_url}:v${BUILD_NUMBER}
+        //             """
+        //         }
+        //     }
+        // }
+        // stage("Push Docker Images"){
+        //     steps{
+        //         script {
+        //             sh """
+        //                 docker login -u sothy -p ${docker_hub_password}
+        //                 docker push ${docker_repo_url}:v${BUILD_NUMBER}
+        //             """
+        //         }
+        //     }
+        // }
+        // stage("Deployment to Server"){
+        //     steps{
+        //         script {
+        //             sh """
+        //                 ssh root@152.42.214.43 "docker rm -f ${project_name}; docker run -d --name ${project_name} -p 4000:4000 --restart always ${docker_repo_url}:v${BUILD_NUMBER}"
+        //             """
+        //         }
+        //     }
+            
+        // }
+    }
+    post {
+        success {
+            script {
+                def message = """🚀 *Application Deployment on ${project_name} completed!*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ *Application Information:*
+- Application Name: ${project_name}
+- Application URL: ${app_url}
+- Application Version: "${docker_repo_url}:v${BUILD_NUMBER}"
+- BUILD USER: "${BUILD_USER}"
+"""
+                sh """
+                    curl -s -X POST https://api.telegram.org/bot${Telegram_Token}/sendMessage \
+                    -d chat_id=${Telegram_ChatID} \
+                    -d parse_mode=Markdown \
+                    -d text="${message}"
+                """
+            }
+        }    
+        failure {
+            script {
+                def failureMessage = "❌ *Deployment Failed!* Application: ${project_name} Check Jenkins for details."
+                
+                sh """
+                    curl -s -X POST https://api.telegram.org/bot${Telegram_Token}/sendMessage \
+                    -d chat_id=${Telegram_ChatID} \
+                    -d parse_mode=Markdown \
+                    -d text="${failureMessage}"
+                """
+            }
+        }
+    }
+}
