@@ -1,4 +1,5 @@
-```
+Noted: Please clone/fork this project to your personal github/gitlab account first 
+```bash
 requirement:
 - Jenkins Server
 - Application Server with Docker Installed
