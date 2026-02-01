@@ -196,5 +196,119 @@ employee-api-prod ansible_host=152.42.214.44 ansible_ssh_user=root
 ansible_python_interpreter=/usr/bin/python3
 ```
 ==> Please update all values to your application server ip address
+* Steps to Create Pipeline with SCM Integration (Application Deployment) 
+1. Create a New Pipeline Job
+
+From Jenkins Dashboard
+
+Click "New Item" (top left)
+Enter a job name (e.g., ansible-cicd-pipeline)
+Select "Pipeline" as the job type
+Click "OK"
+
+
+
+2. Configure General Settings (Optional)
+
+Add a Description (e.g., "Ansible CI/CD Pipeline from GitHub")
+Configure other options as needed:
+
+Discard old builds
+Build triggers
+Parameters, etc.
+
+
+
+3. Configure Pipeline Definition
+
+Scroll down to the "Pipeline" section
+Definition: Select "Pipeline script from SCM" from the dropdown
+SCM Configuration:
+
+SCM: Select "Git"
+
+
+Repository URL:
+
+Enter: https://github.com/SothyLorn/jenkins-ansible-cicd.git
+
+
+Credentials (if repository is private):
+
+Click "Add" → "Jenkins" to add GitHub credentials
+Or select existing credentials from the dropdown
+For public repos, you can leave this as "- none -"
+
+
+Branches to build:
+
+Remove any default branch specifiers
+Click "Add Branch"
+Enter: */main
+Or simply: main
+
+
+Script Path:
+
+Enter: ansible.jenkinsfile
+This tells Jenkins where to find the Jenkinsfile in your repository
+
+Steps to Create Pipeline with SCM Integration (Rollback Pipeline)
+1. Create a New Pipeline Job
+
+From Jenkins Dashboard
+
+Click "New Item" (top left)
+Enter a job name (e.g., ansible-cicd-rollback)
+Select "Pipeline" as the job type
+Click "OK"
+
+
+
+2. Configure General Settings (Optional)
+
+Add a Description (e.g., "Ansible CI/CD Rollback Pipeline from GitHub")
+Configure other options as needed:
+
+Discard old builds
+Build triggers
+Parameters, etc.
+
+
+
+3. Configure Pipeline Definition
+
+Scroll down to the "Pipeline" section
+Definition: Select "Pipeline script from SCM" from the dropdown
+SCM Configuration:
+
+SCM: Select "Git"
+
+
+Repository URL:
+
+Enter: https://github.com/SothyLorn/jenkins-ansible-cicd.git
+
+
+Credentials (if repository is private):
+
+Click "Add" → "Jenkins" to add GitHub credentials
+Or select existing credentials from the dropdown
+For public repos, you can leave this as "- none -"
+
+
+Branches to build:
+
+Remove any default branch specifiers
+Click "Add Branch"
+Enter: */main
+Or simply: main
+
+
+Script Path:
+
+Enter: rollback.jenkinsfile
+This tells Jenkins where to find the Jenkinsfile in your repository
+
 
 
