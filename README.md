@@ -111,6 +111,50 @@ Save
 
 Click "OK" or "Create" to save the credential
 
+* Install build user var public on jenkins
+Part 1: Installing the Build User Vars Plugin
+Method 1: Through Jenkins UI (Recommended)
+
+Navigate to Plugin Manager
+
+From Jenkins dashboard, click "Manage Jenkins"
+Click "Manage Plugins" (or "Plugins" in newer Jenkins versions)
+
+
+Search for the Plugin
+
+Go to the "Available" tab (or "Available plugins")
+In the search box, type: Build User Vars Plugin
+Alternatively, search for: user build vars
+
+
+Install the Plugin
+
+Check the box next to "Build User Vars Plugin"
+Click "Install without restart" or "Download now and install after restart"
+Wait for the installation to complete
+
+
+Restart Jenkins (if required)
+
+If prompted, restart Jenkins to activate the plugin
+You can do this by visiting: http://your-jenkins-url/restart
+
+Part 2: Enable Build User Vars in System Configuration
+For Freestyle Jobs:
+
+Job Configuration
+
+Open your Jenkins job
+Click "Configure"
+
+
+Enable Build User Vars
+
+In the "Build Environment" section
+Check the box: "Set jenkins user build variables"
+Save the configuration
+
 
 
 
