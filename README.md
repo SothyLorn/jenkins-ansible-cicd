@@ -80,5 +80,37 @@ ssh root@application_server
 ```
 write ```Y``` + ```ENTER```
 
+* Steps to Create Secret Text Credentials in Jenkins:
+
+Navigate to Credentials
+
+From the Jenkins dashboard, click on "Manage Jenkins"
+Click on "Manage Credentials"
+
+
+Select the Credential Store
+
+Click on the domain where you want to add the credential (usually "Global credentials (unrestricted)")
+Or click on "System" → "Global credentials (unrestricted)"
+
+
+Add New Credentials
+
+Click "Add Credentials" on the left side
+
+
+Configure the Secret Text Credential
+
+Kind: Select "Secret text" from the dropdown
+Scope: Choose "Global" (accessible from any job) or "System" (only for system-level operations)
+Secret: Enter your Docker Hub password/token here
+ID: Enter docker_hub_password (this is the identifier you'll use to reference this credential)
+Description: (Optional) Add a description like "Docker Hub Password" to help identify it later
+
+Save
+
+Click "OK" or "Create" to save the credential
+
+
 
 
