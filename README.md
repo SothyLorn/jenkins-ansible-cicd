@@ -1,4 +1,5 @@
 Noted: Please clone/fork this project to your personal github/gitlab account first 
+```git clone https://github.com/SothyLorn/jenkins-ansible-cicd.git```
 ```bash
 requirement:
 - Jenkins Server
