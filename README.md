@@ -155,6 +155,46 @@ In the "Build Environment" section
 Check the box: "Set jenkins user build variables"
 Save the configuration
 
+* Update code on jenkins file
+File ```jenkins-ansible-cicd/ansible.jenkinsfile```
 
+```bash
+environment {
+        docker_hub_password = credentials('docker_hub_password')
+        docker_repo_url = "sothy/employee-api-demo"
+        project_name = "employee-api"
+        git_repo = "https://github.com/sothylorn/employee-api.git"
+        app_url = "https://employee-api.sothy.site"
+        Telegram_Token="8567963411:AAF6c1uoaVPazm-WY6VkY-7yuG7WYRtDrRE"
+        Telegram_ChatID="-5196312295"
+}
+```
+==> Please update all values to your application information 
+File ```jenkins-ansible-cicd/rollback.jenkinsfile```
+```bash
+environment {
+        docker_hub_password = credentials('docker_hub_password')
+        docker_repo_url = "sothy/employee-api-demo"
+        project_name = "employee-api"
+        git_repo = "https://github.com/sothylorn/employee-api.git"
+        app_url = "https://employee-api.sothy.site"
+        Telegram_Token="8567963411:AAF6c1uoaVPazm-WY6VkY-7yuG7WYRtDrRE"
+        Telegram_ChatID="-5196312295"
+}
+```
+==> Please update all values to your application information
+
+File ```jenkins-ansible-cicd/ansible/hosts```
+```bash
+localhost ansible_connection=local
+
+[employee]
+employee-api-dev ansible_host=152.42.214.43 ansible_ssh_user=root
+employee-api-uat ansible_host=152.42.214.41 ansible_ssh_user=root
+employee-api-prod ansible_host=152.42.214.44 ansible_ssh_user=root
+[all:vars]
+ansible_python_interpreter=/usr/bin/python3
+```
+==> Please update all values to your application server ip address
 
 
