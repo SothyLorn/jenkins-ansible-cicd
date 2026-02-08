@@ -1,8 +1,0 @@
-localhost ansible_connection=local
-
-[employee]
-employee-api-dev ansible_host=152.42.214.43 ansible_ssh_user=root
-employee-api-uat ansible_host=152.42.214.41 ansible_ssh_user=root
-employee-api-prod ansible_host=152.42.214.44 ansible_ssh_user=root
-[all:vars]
-ansible_python_interpreter=/usr/bin/python3
